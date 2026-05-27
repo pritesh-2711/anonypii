@@ -1,0 +1,125 @@
+# anonypii default entity configuration
+# schema_version must match the loader's SUPPORTED_SCHEMA_VERSIONS list.
+# -----------------------------------------------------------------------
+# To use a subset: copy this file, remove unwanted types, and pass the
+# path to Anonymizer(config_path="your_config.yaml").
+#
+# You can activate types either individually (active_entity_types) or
+# by coarse group (active_coarse_groups), or both — the union is used.
+# If both lists are empty and active_entity_types is omitted entirely,
+# all 82 entity types are active.
+# -----------------------------------------------------------------------
+
+schema_version: "1.0"
+
+# Leave this key absent or set to [] to activate ALL entity types.
+# active_entity_types:
+
+# Leave this key absent or set to [] to activate ALL coarse groups.
+# active_coarse_groups:
+
+# --- All 82 entity types for reference ---
+# Uncomment and trim this list to restrict detection:
+#
+# active_entity_types:
+#   # FINANCIAL_ID
+#   - ACCOUNT_NUMBER
+#   - BBAN
+#   - BIC
+#   - CREDIT_CARD
+#   - CREDIT_CARD_NUMBER
+#   - CREDIT_DEBIT_CARD
+#   - CVV
+#   - IBAN
+#   - SWIFT_BIC
+#   - SWIFT_BIC_CODE
+#   - BANK_ROUTING_NUMBER
+#
+#   # LOCATION
+#   - ADDRESS
+#   - CITY
+#   - COORDINATE
+#   - COUNTRY
+#   - COUNTY
+#   - LOC
+#   - LOCAL_LATLNG
+#   - POSTCODE
+#   - STATE
+#   - STREET_ADDRESS
+#
+#   # PERSON_GROUP
+#   - AGE
+#   - FIRST_NAME
+#   - GENDER
+#   - LAST_NAME
+#   - NAME
+#   - PERSON
+#
+#   # ORG_ROLE
+#   - COMPANY
+#   - COMPANY_NAME
+#   - JOB
+#   - OCCUPATION
+#   - ORG
+#
+#   # TEMPORAL
+#   - DATE
+#   - DATE_OF_BIRTH
+#   - DATE_TIME
+#   - TIME
+#
+#   # NETWORK
+#   - DEVICE_IDENTIFIER
+#   - HTTP_COOKIE
+#   - IP_ADDRESS
+#   - IPV4
+#   - IPV6
+#   - MAC_ADDRESS
+#   - URL
+#   - USERNAME
+#   - USER_NAME
+#
+#   # MISC
+#   - AMOUNT
+#   - BLOOD_TYPE
+#   - CC_SECURITY_CODE
+#   - CRYPTO_ADDRESS
+#   - CURRENCY
+#   - EDUCATION_LEVEL
+#   - EMPLOYMENT_STATUS
+#   - LANGUAGE
+#   - LICENSE_PLATE
+#   - MISC
+#   - POLITICAL_VIEW
+#   - RACE_ETHNICITY
+#   - RELIGIOUS_BELIEF
+#   - SEXUALITY
+#   - VEHICLE
+#   - VEHICLE_IDENTIFIER
+#
+#   # CONTACT
+#   - EMAIL
+#   - FAX_NUMBER
+#   - PHONE
+#   - PHONE_NUMBER
+#
+#   # CREDENTIAL
+#   - ACCOUNT_PIN
+#   - API_KEY
+#   - BIOMETRIC_ID
+#   - CERT_LICENSE_NUM
+#   - CUSTOMER_ID
+#   - DRIVER_LICENSE
+#   - EMPLOYEE_ID
+#   - HP_BENEF_NUMBER
+#   - MEDICAL_RECORD
+#   - NATIONAL_ID
+#   - PASSPORT_NUMBER
+#   - PASSWORD
+#   - PIN
+#   - SSN
+#   - TAX_ID
+#   - UNIQUE_ID
+#
+#   # FINANCIAL_NER
+#   - FINANCIAL_ENTITY
