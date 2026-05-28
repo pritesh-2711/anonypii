@@ -51,7 +51,7 @@ class DetectionResult:
         kept = tuple(e for e in self.entities if e.confidence >= threshold)
         return DetectionResult(text=self.text, entities=kept, error=self.error)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, object]:
         return {
             "text": self.text,
             "has_pii": self.has_pii,
@@ -120,7 +120,7 @@ class AnonymizationResult:
             result = result.replace(token, original)
         return result
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, object]:
         return {
             "text": self.text,
             "original_text": self.original_text,

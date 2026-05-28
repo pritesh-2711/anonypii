@@ -23,13 +23,13 @@ from __future__ import annotations
 class AnonypiiError(Exception):
     """Base exception for all anonypii errors."""
 
-    def __init__(self, message: str, details: dict | None = None) -> None:
+    def __init__(self, message: str, details: dict[str, object] | None = None) -> None:
         super().__init__(message)
         self.message = message
-        self.details: dict = details or {}
+        self.details: dict[str, object] = details or {}
 
-    def to_dict(self) -> dict:
-        d: dict = {"error": self.__class__.__name__, "message": self.message}
+    def to_dict(self) -> dict[str, object]:
+        d: dict[str, object] = {"error": self.__class__.__name__, "message": self.message}
         if self.details:
             d["details"] = self.details
         return d

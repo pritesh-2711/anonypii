@@ -81,7 +81,7 @@ class ModelPIIDetector(PIIDetector):
         batch_size: int = 32,
         active_entity_types: set[EntityType] | None = None,
         confidence_thresholds: dict[EntityType, float] | None = None,
-        allowlist: list[str | re.Pattern] | None = None,
+        allowlist: list[str | re.Pattern[str]] | None = None,
         overlap_policy: OverlapPolicy = OverlapPolicy.LONGEST_SPAN,
     ) -> None:
         super().__init__(

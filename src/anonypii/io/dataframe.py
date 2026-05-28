@@ -6,21 +6,18 @@ Anonymizes specified columns (or all object-dtype columns) in a DataFrame.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from anonypii.core.anonymizer import Anonymizer
 from anonypii.core.result import AnonymizationResult
 
-if TYPE_CHECKING:
-    import pandas as pd  # type: ignore
-
 
 def process_dataframe(
-    df: pd.DataFrame,
+    df: Any,
     anonymizer: Anonymizer,
     columns: list[str] | None = None,
     inplace: bool = False,
-) -> tuple[pd.DataFrame, dict[str, list[AnonymizationResult]]]:
+) -> tuple[Any, dict[str, list[AnonymizationResult]]]:
     """
     Anonymize string columns in a pandas DataFrame.
 

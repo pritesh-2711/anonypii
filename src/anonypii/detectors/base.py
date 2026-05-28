@@ -64,7 +64,7 @@ class PIIDetector(ABC):
         active_entity_types: set[EntityType] | None = None,
         confidence_threshold: float = 0.0,
         confidence_thresholds: dict[EntityType, float] | None = None,
-        allowlist: list[str | re.Pattern] | None = None,
+        allowlist: list[str | re.Pattern[str]] | None = None,
         overlap_policy: OverlapPolicy = OverlapPolicy.LONGEST_SPAN,
     ) -> None:
         self.active_entity_types: frozenset[EntityType] = (
@@ -73,7 +73,7 @@ class PIIDetector(ABC):
         self.confidence_threshold = confidence_threshold
         self.confidence_thresholds: dict[EntityType, float] = confidence_thresholds or {}
         self.overlap_policy = overlap_policy
-        self._allowlist: list[str | re.Pattern] = allowlist or []
+        self._allowlist: list[str | re.Pattern[str]] = allowlist or []
 
     # ------------------------------------------------------------------
     # Abstract interface
@@ -120,7 +120,7 @@ class PIIDetector(ABC):
     # Allowlist management
     # ------------------------------------------------------------------
 
-    def add_to_allowlist(self, *entries: str | re.Pattern) -> None:
+    def add_to_allowlist(self, *entries: str | re.Pattern[str]) -> None:
         """Add one or more literal strings or compiled regex patterns."""
         self._allowlist.extend(entries)
 

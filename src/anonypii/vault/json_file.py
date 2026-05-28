@@ -15,6 +15,7 @@ import tempfile
 from collections.abc import Generator
 from contextlib import contextmanager, suppress
 from pathlib import Path
+from typing import cast
 
 from anonypii.core.exceptions import VaultReadError, VaultWriteError
 from anonypii.vault.base import Vault
@@ -118,7 +119,7 @@ class JsonFileVault(Vault):
             raise VaultReadError(f"Cannot read vault at '{self._path}': {exc}") from exc
         if not isinstance(data, dict):
             raise VaultReadError(f"Vault file '{self._path}' is corrupt (not a JSON object).")
-        return data  # type: ignore[return-value]
+        return cast("dict[str, str]", data)
 
     def _write_raw(self, data: dict[str, str]) -> None:
         try:

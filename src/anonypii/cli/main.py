@@ -17,6 +17,10 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from anonypii.core.anonymizer import Anonymizer
 
 
 def _print_err(msg: str) -> None:
@@ -106,7 +110,7 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _build_anonymizer(args: argparse.Namespace):
+def _build_anonymizer(args: argparse.Namespace) -> Anonymizer:
     from anonypii.core.anonymizer import Anonymizer
     from anonypii.masking.strategies import (
         RedactedMaskingStrategy,

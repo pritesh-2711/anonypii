@@ -101,7 +101,6 @@ class ModelDownloader:
         local_dir = snapshot_download(
             repo_id=info.hf_repo,
             local_dir=str(target),
-            local_dir_use_symlinks=False,
         )
 
         if show_progress:
