@@ -49,13 +49,18 @@ all = [
     "anonypii[model]",
     "anonypii[pandas]",
 ]
-dev = [
+dev-core = [
     "pytest>=8.0",
     "pytest-cov>=4.0",
     "pytest-mock>=3.12",
     "mypy>=1.8",
     "ruff>=0.3",
     "pre-commit>=3.6",
+    "types-pyyaml>=6.0",
+    "pyyaml>=6.0",
+]
+dev = [
+    "anonypii[dev-core]",
     "pandas>=2.0",
     "torch>=2.0",
     "transformers>=4.30",
@@ -63,9 +68,7 @@ dev = [
     "sentencepiece>=0.1.99",
     "accelerate>=0.20",
     "numpy>=1.24.0",
-    "types-pyyaml>=6.0",
 ]
-
 [project.scripts]
 anonypii = "anonypii.cli.main:main"
 

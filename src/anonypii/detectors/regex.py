@@ -113,9 +113,7 @@ _PATTERNS: list[tuple[EntityType, re.Pattern]] = [
     ),
     (
         EntityType.PHONE_NUMBER,
-        re.compile(
-            r"\b(?:\+\d{1,3}[\s\-.]?)?\(?\d{3}\)?[\s\-.]?\d{3}[\s\-.]?\d{4}\b"
-        ),
+        re.compile(r"\b(?:\+\d{1,3}[\s\-.]?)?\(?\d{3}\)?[\s\-.]?\d{3}[\s\-.]?\d{4}\b"),
     ),
     # DATE_OF_BIRTH / DATE (ISO and common formats)
     (
@@ -152,8 +150,8 @@ _PATTERNS: list[tuple[EntityType, re.Pattern]] = [
     (
         EntityType.CRYPTO_ADDRESS,
         re.compile(
-            r"\b[13][a-km-zA-HJ-NP-Z1-9]{25,34}\b"   # Bitcoin P2PKH/P2SH
-            r"|0x[a-fA-F0-9]{40}\b",                   # Ethereum
+            r"\b[13][a-km-zA-HJ-NP-Z1-9]{25,34}\b"  # Bitcoin P2PKH/P2SH
+            r"|0x[a-fA-F0-9]{40}\b",  # Ethereum
         ),
     ),
 ]

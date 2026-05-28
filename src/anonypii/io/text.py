@@ -7,8 +7,8 @@ process_text_file_batch()— load all lines then process in one batch call
 
 from __future__ import annotations
 
+from collections.abc import Generator
 from pathlib import Path
-from typing import Generator
 
 from anonypii.core.anonymizer import Anonymizer
 from anonypii.core.result import AnonymizationResult
@@ -33,11 +33,12 @@ def process_text_file(
     skip_blank:   Skip blank lines (default True).
     encoding:     File encoding (default utf-8).
     """
-    for line in Path(path).open(encoding=encoding):
-        stripped = line.rstrip("\n")
-        if skip_blank and not stripped.strip():
-            continue
-        yield anonymizer.anonymize(stripped)
+    with Path(path).open(encoding=encoding) as fh:
+        for line in fh:
+            stripped = line.rstrip("\n")
+            if skip_blank and not stripped.strip():
+                continue
+            yield anonymizer.anonymize(stripped)
 
 
 def process_text_file_batch(
@@ -52,11 +53,8 @@ def process_text_file_batch(
 
     Loads the full file into memory; use process_text_file() for large files.
     """
-    lines = [
-        line.rstrip("\n")
-        for line in Path(path).open(encoding=encoding)
-        if not skip_blank or line.strip()
-    ]
+    with Path(path).open(encoding=encoding) as fh:
+        lines = [line.rstrip("\n") for line in fh if not skip_blank or line.strip()]
     return anonymizer.anonymize_batch(lines)
 
 

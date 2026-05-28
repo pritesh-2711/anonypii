@@ -14,7 +14,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from anonypii.models.registry import ALL_MODEL_NAMES, DEFAULT_MODEL, REGISTRY, get_model_info
+from anonypii.models.registry import ALL_MODEL_NAMES, REGISTRY, get_model_info
 
 
 def default_cache_dir() -> Path:
@@ -54,10 +54,7 @@ class ModelDownloader:
         if not path.exists():
             return False
         has_config = (path / "config.json").exists()
-        has_weights = (
-            (path / "model.safetensors").exists()
-            or (path / "pytorch_model.bin").exists()
-        )
+        has_weights = (path / "model.safetensors").exists() or (path / "pytorch_model.bin").exists()
         has_label_mapping = (path / "label_mapping.json").exists()
         return has_config and has_weights and has_label_mapping
 

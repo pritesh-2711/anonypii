@@ -48,7 +48,7 @@ class TokenGenerator(ABC):
         original_text:  The raw PII text (used for deduplication by some generators).
         """
 
-    def reset(self) -> None:
+    def reset(self) -> None:  # noqa: B027
         """Reset any internal counters.  Default is a no-op."""
 
 
@@ -75,9 +75,7 @@ class SequentialTokenGenerator(TokenGenerator):
             return self._seen[key]
         self._counters[entity_type.value] += 1
         index = self._counters[entity_type.value]
-        token = (
-            f"{{{{{self._prefix}{entity_type.value}_{index:0{self._digits}d}{self._suffix}}}}}"
-        )
+        token = f"{{{{{self._prefix}{entity_type.value}_{index:0{self._digits}d}{self._suffix}}}}}"
         self._seen[key] = token
         return token
 

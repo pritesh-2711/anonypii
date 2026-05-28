@@ -12,9 +12,9 @@ import json
 import os
 import sys
 import tempfile
-from contextlib import contextmanager
+from collections.abc import Generator
+from contextlib import contextmanager, suppress
 from pathlib import Path
-from typing import Generator
 
 from anonypii.core.exceptions import VaultReadError, VaultWriteError
 from anonypii.vault.base import Vault
@@ -23,7 +23,7 @@ from anonypii.vault.base import Vault
 @contextmanager
 def _file_lock(path: Path) -> Generator[None, None, None]:
     lock_path = path.with_suffix(path.suffix + ".lock")
-    lock_fd = open(lock_path, "w")  # noqa: WPS515
+    lock_fd = open(lock_path, "w")  # noqa: SIM115, WPS515
     try:
         if sys.platform == "win32":
             import msvcrt
@@ -38,19 +38,15 @@ def _file_lock(path: Path) -> Generator[None, None, None]:
         if sys.platform == "win32":
             import msvcrt
 
-            try:
+            with suppress(OSError):
                 msvcrt.locking(lock_fd.fileno(), msvcrt.LK_UNLCK, 1)
-            except OSError:
-                pass
         else:
             import fcntl
 
             fcntl.flock(lock_fd.fileno(), fcntl.LOCK_UN)
         lock_fd.close()
-        try:
+        with suppress(OSError):
             lock_path.unlink(missing_ok=True)
-        except OSError:
-            pass
 
 
 class JsonFileVault(Vault):
@@ -133,10 +129,8 @@ class JsonFileVault(Vault):
                     json.dump(data, f, indent=2, ensure_ascii=False)
                 os.replace(tmp, self._path)
             except Exception:
-                try:
+                with suppress(OSError):
                     os.unlink(tmp)
-                except OSError:
-                    pass
                 raise
         except OSError as exc:
             raise VaultWriteError(f"Cannot write vault to '{self._path}': {exc}") from exc

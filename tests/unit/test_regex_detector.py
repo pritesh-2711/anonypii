@@ -100,11 +100,13 @@ class TestRegexPIIDetector:
 
     def test_detect_batch(self) -> None:
         d = self._detector()
-        results = d.detect_batch([
-            "john@example.com",
-            "no pii here",
-            "123-45-6789",
-        ])
+        results = d.detect_batch(
+            [
+                "john@example.com",
+                "no pii here",
+                "123-45-6789",
+            ]
+        )
         assert len(results) == 3
         assert results[0].has_pii
         assert not results[1].has_pii

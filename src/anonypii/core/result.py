@@ -7,9 +7,9 @@ Both types are immutable dataclasses with serialization helpers.
 from __future__ import annotations
 
 import json
+from collections.abc import Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterator
 
 from anonypii.core.entities import CoarseGroup, Entity, EntityType
 

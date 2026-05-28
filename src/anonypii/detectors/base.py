@@ -15,8 +15,8 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
+from collections.abc import Generator, Iterable
 from enum import Enum
-from typing import Generator, Iterable
 
 from anonypii.core.entities import ALL_ENTITY_TYPES, Entity, EntityType
 from anonypii.core.result import DetectionResult
@@ -111,9 +111,7 @@ class PIIDetector(ABC):
         """Run detect() over a list of texts sequentially."""
         return [self.detect(t) for t in texts]
 
-    def detect_stream(
-        self, texts: Iterable[str]
-    ) -> Generator[DetectionResult, None, None]:
+    def detect_stream(self, texts: Iterable[str]) -> Generator[DetectionResult, None, None]:
         """Yield DetectionResult objects one at a time from any iterable."""
         for text in texts:
             yield self.detect(text)
@@ -138,9 +136,7 @@ class PIIDetector(ABC):
         for entity in entities:
             if entity.type not in self.active_entity_types:
                 continue
-            threshold = self.confidence_thresholds.get(
-                entity.type, self.confidence_threshold
-            )
+            threshold = self.confidence_thresholds.get(entity.type, self.confidence_threshold)
             if entity.confidence < threshold:
                 continue
             if self._is_allowlisted(entity.text):

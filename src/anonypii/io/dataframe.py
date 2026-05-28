@@ -12,7 +12,7 @@ from anonypii.core.anonymizer import Anonymizer
 from anonypii.core.result import AnonymizationResult
 
 if TYPE_CHECKING:
-    import pandas as pd
+    import pandas as pd  # type: ignore
 
 
 def process_dataframe(
@@ -39,7 +39,7 @@ def process_dataframe(
                            (one per row)
     """
     try:
-        import pandas as pd
+        import pandas as pd  # noqa: F401
     except ImportError as exc:
         raise ImportError(
             "pandas is required for DataFrame processing. "

@@ -14,8 +14,6 @@ TokenMaskingStrategy    {{EMAIL_001}}                     — reversible
 
 from __future__ import annotations
 
-import math
-import re
 from abc import ABC, abstractmethod
 
 from anonypii.core.entities import Entity

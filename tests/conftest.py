@@ -4,18 +4,15 @@ pytest configuration and shared fixtures.
 
 from __future__ import annotations
 
-import re
-
 import pytest
 
 from anonypii.core.entities import Entity, EntityType
-from anonypii.detectors.base import PIIDetector, OverlapPolicy
-from anonypii.core.result import DetectionResult
-
+from anonypii.detectors.base import PIIDetector
 
 # ---------------------------------------------------------------------------
 # Custom pytest markers
 # ---------------------------------------------------------------------------
+
 
 def pytest_configure(config: pytest.Config) -> None:
     config.addinivalue_line(

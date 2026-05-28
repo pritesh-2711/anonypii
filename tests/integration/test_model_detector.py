@@ -27,8 +27,8 @@ skip_if_no_model = pytest.mark.skipif(
 @pytest.mark.requires_model
 @skip_if_no_model
 def test_model_detector_detect_email() -> None:
-    from anonypii.detectors.model import ModelPIIDetector
     from anonypii.core.entities import EntityType
+    from anonypii.detectors.model import ModelPIIDetector
 
     detector = ModelPIIDetector(model=DEFAULT_MODEL)
     result = detector.detect("My email is alice@example.com")
@@ -68,5 +68,6 @@ def test_model_not_downloaded_raises() -> None:
     from anonypii.detectors.model import ModelPIIDetector
 
     with pytest.raises(ModelNotDownloadedError):
-        ModelPIIDetector(model=DEFAULT_MODEL, download=False,
-                         cache_dir="/tmp/__nonexistent_cache__")
+        ModelPIIDetector(
+            model=DEFAULT_MODEL, download=False, cache_dir="/tmp/__nonexistent_cache__"
+        )

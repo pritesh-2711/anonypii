@@ -1,11 +1,7 @@
-import re
-
 import pytest
 
 from anonypii.core.anonymizer import Anonymizer, ReversibleAnonymizer
-from anonypii.core.entities import Entity, EntityType
 from anonypii.core.result import AnonymizationResult
-from anonypii.detectors.base import PIIDetector
 from anonypii.detectors.regex import RegexPIIDetector
 from anonypii.masking.strategies import (
     RedactedMaskingStrategy,

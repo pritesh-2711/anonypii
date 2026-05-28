@@ -15,8 +15,8 @@ ReversibleAnonymizer
 from __future__ import annotations
 
 import re
+from collections.abc import Generator, Iterable
 from pathlib import Path
-from typing import Generator, Iterable
 
 from anonypii.config.loader import load_entity_config
 from anonypii.core.entities import EntityType
@@ -106,11 +106,7 @@ class Anonymizer:
         overlap_policy: OverlapPolicy = OverlapPolicy.LONGEST_SPAN,
         audit_log: bool = False,
     ) -> None:
-        active = (
-            frozenset(entity_types)
-            if entity_types
-            else load_entity_config(config_path)
-        )
+        active = frozenset(entity_types) if entity_types else load_entity_config(config_path)
 
         if detector is not None:
             self._detector = detector
@@ -131,9 +127,7 @@ class Anonymizer:
             self._detector.confidence_thresholds.update(confidence_thresholds)
 
         self._mask_strategy: MaskingStrategy = strategy or TagMaskingStrategy()
-        self._reversible_strategy: MaskingStrategy = (
-            reversible_strategy or TokenMaskingStrategy()
-        )
+        self._reversible_strategy: MaskingStrategy = reversible_strategy or TokenMaskingStrategy()
         self._audit_log = audit_log
         self.audit_records: list[dict] = []
 
@@ -180,9 +174,7 @@ class Anonymizer:
         """Apply anonymize() to a list of texts."""
         return [self.anonymize(t) for t in texts]
 
-    def anonymize_stream(
-        self, texts: Iterable[str]
-    ) -> Generator[AnonymizationResult, None, None]:
+    def anonymize_stream(self, texts: Iterable[str]) -> Generator[AnonymizationResult, None, None]:
         """Yield AnonymizationResult objects one at a time from any iterable."""
         for text in texts:
             yield self.anonymize(text)
