@@ -17,6 +17,10 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from anonypii.core.anonymizer import Anonymizer
 
 
 def _print_err(msg: str) -> None:
@@ -106,7 +110,7 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _build_anonymizer(args: argparse.Namespace):
+def _build_anonymizer(args: argparse.Namespace) -> Anonymizer:
     from anonypii.core.anonymizer import Anonymizer
     from anonypii.masking.strategies import (
         RedactedMaskingStrategy,
@@ -133,9 +137,7 @@ def _build_anonymizer(args: argparse.Namespace):
 def _get_texts(args: argparse.Namespace) -> list[str]:
     if getattr(args, "file", None):
         return [
-            line.rstrip("\n")
-            for line in Path(args.file).open(encoding="utf-8")
-            if line.strip()
+            line.rstrip("\n") for line in Path(args.file).open(encoding="utf-8") if line.strip()
         ]
     if getattr(args, "text", None):
         return [args.text]
@@ -250,7 +252,7 @@ def _cmd_info(_args: argparse.Namespace) -> None:
         print(f"           F1={info.full_test_f1:.4f}  {info.description[:70]}")
     if missing:
         print()
-        print(f"To download missing models:  anonypii download all")
+        print("To download missing models:  anonypii download all")
 
 
 def main() -> None:

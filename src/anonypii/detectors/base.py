@@ -15,8 +15,8 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
+from collections.abc import Generator, Iterable
 from enum import Enum
-from typing import Generator, Iterable
 
 from anonypii.core.entities import ALL_ENTITY_TYPES, Entity, EntityType
 from anonypii.core.result import DetectionResult
@@ -64,7 +64,7 @@ class PIIDetector(ABC):
         active_entity_types: set[EntityType] | None = None,
         confidence_threshold: float = 0.0,
         confidence_thresholds: dict[EntityType, float] | None = None,
-        allowlist: list[str | re.Pattern] | None = None,
+        allowlist: list[str | re.Pattern[str]] | None = None,
         overlap_policy: OverlapPolicy = OverlapPolicy.LONGEST_SPAN,
     ) -> None:
         self.active_entity_types: frozenset[EntityType] = (
@@ -73,7 +73,7 @@ class PIIDetector(ABC):
         self.confidence_threshold = confidence_threshold
         self.confidence_thresholds: dict[EntityType, float] = confidence_thresholds or {}
         self.overlap_policy = overlap_policy
-        self._allowlist: list[str | re.Pattern] = allowlist or []
+        self._allowlist: list[str | re.Pattern[str]] = allowlist or []
 
     # ------------------------------------------------------------------
     # Abstract interface
@@ -111,9 +111,7 @@ class PIIDetector(ABC):
         """Run detect() over a list of texts sequentially."""
         return [self.detect(t) for t in texts]
 
-    def detect_stream(
-        self, texts: Iterable[str]
-    ) -> Generator[DetectionResult, None, None]:
+    def detect_stream(self, texts: Iterable[str]) -> Generator[DetectionResult, None, None]:
         """Yield DetectionResult objects one at a time from any iterable."""
         for text in texts:
             yield self.detect(text)
@@ -122,7 +120,7 @@ class PIIDetector(ABC):
     # Allowlist management
     # ------------------------------------------------------------------
 
-    def add_to_allowlist(self, *entries: str | re.Pattern) -> None:
+    def add_to_allowlist(self, *entries: str | re.Pattern[str]) -> None:
         """Add one or more literal strings or compiled regex patterns."""
         self._allowlist.extend(entries)
 
@@ -138,9 +136,7 @@ class PIIDetector(ABC):
         for entity in entities:
             if entity.type not in self.active_entity_types:
                 continue
-            threshold = self.confidence_thresholds.get(
-                entity.type, self.confidence_threshold
-            )
+            threshold = self.confidence_thresholds.get(entity.type, self.confidence_threshold)
             if entity.confidence < threshold:
                 continue
             if self._is_allowlisted(entity.text):

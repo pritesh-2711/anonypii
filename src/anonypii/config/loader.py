@@ -91,8 +91,7 @@ def load_entity_config(path: str | Path | None = None) -> frozenset[EntityType]:
         except ValueError:
             raise InvalidConfigError(
                 str(resolved),
-                f"Unknown coarse group '{name}'. "
-                f"Valid groups: {[g.value for g in CoarseGroup]}",
+                f"Unknown coarse group '{name}'. Valid groups: {[g.value for g in CoarseGroup]}",
             ) from None
         active.update(entity_types_for_group(group))
 

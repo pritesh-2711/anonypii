@@ -13,11 +13,8 @@ from __future__ import annotations
 import re
 from abc import ABC, abstractmethod
 
-from anonypii.core.exceptions import VaultReadError
-
-
 # Token pattern: {{SOME_TYPE_id}} — matches generated placeholder tokens
-_TOKEN_PATTERN = re.compile(r"\{\{[A-Z_]+_[A-Za-z0-9]+\}\}")
+_TOKEN_PATTERN: re.Pattern[str] = re.compile(r"\{\{[A-Z_]+_[A-Za-z0-9]+\}\}")
 
 
 class Vault(ABC):
@@ -58,7 +55,8 @@ class Vault(ABC):
 
         Tokens that are not in the vault are left as-is.
         """
-        def _replace(match: re.Match) -> str:
+
+        def _replace(match: re.Match[str]) -> str:
             token = match.group(0)
             original = self.retrieve(token)
             if original is None:

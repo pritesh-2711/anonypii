@@ -279,7 +279,7 @@ class Entity:
     def coarse_group(self) -> CoarseGroup:
         return ENTITY_COARSE_MAP[self.type]
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, object]:
         return {
             "text": self.text,
             "type": self.type.value,

@@ -1,4 +1,3 @@
-import json
 from pathlib import Path
 
 import pytest
@@ -21,9 +20,7 @@ def test_detection_result_has_pii_false() -> None:
 
 @pytest.mark.unit
 def test_detection_result_entity_types(email_entity: Entity, ssn_entity: Entity) -> None:
-    result = DetectionResult(
-        text="...", entities=(email_entity, ssn_entity)
-    )
+    result = DetectionResult(text="...", entities=(email_entity, ssn_entity))
     assert EntityType.EMAIL in result.entity_types
     assert EntityType.SSN in result.entity_types
 
@@ -37,9 +34,7 @@ def test_detection_result_by_coarse_group(email_entity: Entity) -> None:
 
 
 @pytest.mark.unit
-def test_detection_result_filter_by_type(
-    email_entity: Entity, ssn_entity: Entity
-) -> None:
+def test_detection_result_filter_by_type(email_entity: Entity, ssn_entity: Entity) -> None:
     result = DetectionResult(text="...", entities=(email_entity, ssn_entity))
     filtered = result.filter_by_type(EntityType.EMAIL)
     assert len(filtered.entities) == 1

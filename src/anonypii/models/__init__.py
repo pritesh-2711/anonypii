@@ -2,8 +2,8 @@ from anonypii.models.downloader import ModelDownloader, default_cache_dir
 from anonypii.models.registry import (
     ALL_MODEL_NAMES,
     DEFAULT_MODEL,
-    ModelInfo,
     REGISTRY,
+    ModelInfo,
     get_model_info,
 )
 

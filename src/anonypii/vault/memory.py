@@ -65,9 +65,7 @@ class ThreadSafeInMemoryVault(Vault):
         with self._lock:
             existing = self._store.get(token)
             if existing is not None and existing != original:
-                raise VaultWriteError(
-                    f"Token '{token}' already maps to a different value."
-                )
+                raise VaultWriteError(f"Token '{token}' already maps to a different value.")
             self._store[token] = original
 
     def retrieve(self, token: str) -> str | None:

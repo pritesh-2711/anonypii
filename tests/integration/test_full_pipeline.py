@@ -62,9 +62,7 @@ def test_hash_generator_idempotent_across_calls() -> None:
     salt = b"stable-salt"
     anon = Anonymizer(
         detector=RegexPIIDetector(),
-        reversible_strategy=TokenMaskingStrategy(
-            generator=HashTokenGenerator(salt=salt)
-        ),
+        reversible_strategy=TokenMaskingStrategy(generator=HashTokenGenerator(salt=salt)),
     )
     r1 = anon.anonymize("john@example.com")
     r2 = anon.anonymize("john@example.com")

@@ -29,7 +29,7 @@ from anonypii.detectors.base import OverlapPolicy, PIIDetector
 # Patterns ordered from most-specific to least-specific within a type group
 # to reduce false-positive overlaps.
 
-_PATTERNS: list[tuple[EntityType, re.Pattern]] = [
+_PATTERNS: list[tuple[EntityType, re.Pattern[str]]] = [
     # EMAIL
     (
         EntityType.EMAIL,
@@ -113,9 +113,7 @@ _PATTERNS: list[tuple[EntityType, re.Pattern]] = [
     ),
     (
         EntityType.PHONE_NUMBER,
-        re.compile(
-            r"\b(?:\+\d{1,3}[\s\-.]?)?\(?\d{3}\)?[\s\-.]?\d{3}[\s\-.]?\d{4}\b"
-        ),
+        re.compile(r"\b(?:\+\d{1,3}[\s\-.]?)?\(?\d{3}\)?[\s\-.]?\d{3}[\s\-.]?\d{4}\b"),
     ),
     # DATE_OF_BIRTH / DATE (ISO and common formats)
     (
@@ -152,8 +150,8 @@ _PATTERNS: list[tuple[EntityType, re.Pattern]] = [
     (
         EntityType.CRYPTO_ADDRESS,
         re.compile(
-            r"\b[13][a-km-zA-HJ-NP-Z1-9]{25,34}\b"   # Bitcoin P2PKH/P2SH
-            r"|0x[a-fA-F0-9]{40}\b",                   # Ethereum
+            r"\b[13][a-km-zA-HJ-NP-Z1-9]{25,34}\b"  # Bitcoin P2PKH/P2SH
+            r"|0x[a-fA-F0-9]{40}\b",  # Ethereum
         ),
     ),
 ]
@@ -176,9 +174,9 @@ class RegexPIIDetector(PIIDetector):
         active_entity_types: set[EntityType] | None = None,
         confidence_threshold: float = 0.0,
         confidence_thresholds: dict[EntityType, float] | None = None,
-        allowlist: list[str | re.Pattern] | None = None,
+        allowlist: list[str | re.Pattern[str]] | None = None,
         overlap_policy: OverlapPolicy = OverlapPolicy.LONGEST_SPAN,
-        extra_patterns: list[tuple[EntityType, re.Pattern]] | None = None,
+        extra_patterns: list[tuple[EntityType, re.Pattern[str]]] | None = None,
     ) -> None:
         super().__init__(
             active_entity_types=active_entity_types,
@@ -187,11 +185,11 @@ class RegexPIIDetector(PIIDetector):
             allowlist=allowlist,
             overlap_policy=overlap_policy,
         )
-        self._patterns: list[tuple[EntityType, re.Pattern]] = list(_PATTERNS)
+        self._patterns: list[tuple[EntityType, re.Pattern[str]]] = list(_PATTERNS)
         if extra_patterns:
             self._patterns.extend(extra_patterns)
 
-    def add_pattern(self, entity_type: EntityType, pattern: re.Pattern | str) -> None:
+    def add_pattern(self, entity_type: EntityType, pattern: re.Pattern[str] | str) -> None:
         """Register an additional regex pattern for a given entity type."""
         if isinstance(pattern, str):
             pattern = re.compile(pattern)

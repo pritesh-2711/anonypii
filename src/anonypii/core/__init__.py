@@ -9,8 +9,8 @@ from anonypii.core.entities import (
     entity_types_for_group,
 )
 from anonypii.core.exceptions import (
-    AnonypiiError,
     AnonymizationError,
+    AnonypiiError,
     ConfigError,
     DetectionError,
     EntityTypeNotFoundError,

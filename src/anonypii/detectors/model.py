@@ -81,7 +81,7 @@ class ModelPIIDetector(PIIDetector):
         batch_size: int = 32,
         active_entity_types: set[EntityType] | None = None,
         confidence_thresholds: dict[EntityType, float] | None = None,
-        allowlist: list[str | re.Pattern] | None = None,
+        allowlist: list[str | re.Pattern[str]] | None = None,
         overlap_policy: OverlapPolicy = OverlapPolicy.LONGEST_SPAN,
     ) -> None:
         super().__init__(
@@ -146,12 +146,14 @@ class ModelPIIDetector(PIIDetector):
             label2id: dict[str, int] = mapping["label2id"]
             return id2label, label2id
         except Exception as exc:
-            raise ModelLoadError(self._model_name, f"Cannot read label_mapping.json: {exc}") from exc
+            raise ModelLoadError(
+                self._model_name, f"Cannot read label_mapping.json: {exc}"
+            ) from exc
 
     def _load_model(self, device: str | None) -> tuple[Any, Any, Any]:
         try:
             import torch
-            from transformers import AutoConfig, AutoTokenizer
+            from transformers import AutoConfig
 
             config = AutoConfig.from_pretrained(str(self._model_path))
             architecture = getattr(config, "pii_model_architecture", "flat")
@@ -163,14 +165,10 @@ class ModelPIIDetector(PIIDetector):
             else:
                 from transformers import AutoModelForTokenClassification
 
-                model = AutoModelForTokenClassification.from_pretrained(
-                    str(self._model_path)
-                )
+                model = AutoModelForTokenClassification.from_pretrained(str(self._model_path))
 
             dev = torch.device(
-                device
-                if device
-                else ("cuda" if torch.cuda.is_available() else "cpu")
+                device if device else ("cuda" if torch.cuda.is_available() else "cpu")
             )
             model.to(dev)
             model.eval()
@@ -188,13 +186,12 @@ class ModelPIIDetector(PIIDetector):
         except AttributeError as exc:
             if "'list' object has no attribute 'keys'" not in str(exc):
                 raise
-            return AutoTokenizer.from_pretrained(
-                str(self._model_path), extra_special_tokens={}
-            )
+            return AutoTokenizer.from_pretrained(str(self._model_path), extra_special_tokens={})
 
     def _load_hierarchical_model(self, config: Any) -> Any:
         try:
             import sys
+
             sys.path.insert(0, str(Path(__file__).parent.parent))
             from anonypii._compat.train_novel import (
                 COARSE_NAMES,
@@ -259,7 +256,6 @@ class ModelPIIDetector(PIIDetector):
 
     def _run_batch(self, texts: list[str]) -> list[Any]:
         import torch
-        import numpy as np
 
         from anonypii.core.result import DetectionResult
 
@@ -284,7 +280,7 @@ class ModelPIIDetector(PIIDetector):
 
         results = []
         for j, (text, raw_offsets, shift) in enumerate(
-            zip(texts, raw_offsets_batch, offsets_shifts)
+            zip(texts, raw_offsets_batch, offsets_shifts, strict=True)
         ):
             offset_mapping = self._shift_offsets(raw_offsets, shift)
             pred_ids = torch.argmax(probs[j], dim=-1).cpu().numpy()
@@ -292,6 +288,7 @@ class ModelPIIDetector(PIIDetector):
             entities_raw = self._extract_entities(text, pred_ids, confs, offset_mapping)
             filtered = self._filter(entities_raw)
             from anonypii.detectors.base import _resolve_overlaps
+
             resolved = _resolve_overlaps(filtered, self.overlap_policy)
             sorted_entities = tuple(sorted(resolved, key=lambda e: e.start))
             results.append(DetectionResult(text=text, entities=sorted_entities))
@@ -306,9 +303,7 @@ class ModelPIIDetector(PIIDetector):
             return offsets
         shifted = []
         for cs, ce in offsets:
-            if cs == 0 and ce == 0:
-                shifted.append((0, 0))
-            elif ce <= shift:
+            if cs == 0 and ce == 0 or ce <= shift:
                 shifted.append((0, 0))
             else:
                 shifted.append((max(0, cs - shift), max(0, ce - shift)))
@@ -328,7 +323,7 @@ class ModelPIIDetector(PIIDetector):
         current_confs: list[float] = []
 
         for pred_id, conf, (char_start, char_end) in zip(
-            pred_ids, confidences, offset_mapping
+            pred_ids, confidences, offset_mapping, strict=False
         ):
             if char_start == 0 and char_end == 0:
                 continue
@@ -367,9 +362,7 @@ class ModelPIIDetector(PIIDetector):
 
         if current_type is not None:
             entities.append(
-                self._make_entity(
-                    text, current_type, current_start, current_end, current_confs
-                )
+                self._make_entity(text, current_type, current_start, current_end, current_confs)
             )
 
         return entities

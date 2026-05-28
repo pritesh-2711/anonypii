@@ -75,9 +75,7 @@ class TestJsonIO:
 
     def test_process_json_file(self, tmp_path: Path) -> None:
         src = tmp_path / "data.json"
-        src.write_text(
-            json.dumps({"email": "john@example.com"}), encoding="utf-8"
-        )
+        src.write_text(json.dumps({"email": "john@example.com"}), encoding="utf-8")
         out = tmp_path / "out.json"
         anon = _anon()
         redacted, _ = process_json_file(src, anon, output_path=out)
