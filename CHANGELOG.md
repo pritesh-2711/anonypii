@@ -8,6 +8,11 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Restructured the README with architecture, benchmarks, examples, and citation.
+- Embedded available architecture and example-output assets in the README.
+
 ## [0.1.0] — 2026-05-27
 
 ### Added
